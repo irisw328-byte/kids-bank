@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kids Bank - 媽媽銀行</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+
+    body {
+        font-family: 'Nunito', 'Microsoft JhengHei', sans-serif;
+        background-color: #e0f2f1;
+        text-align: center;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+        font-size: 18px;
+    }
+
+    h1 {
+        color: #00695c;
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+
+    .decoration-img {
+        max-width: 110px;
+        margin: 5px 15px;
+        border-radius: 15px;
+    }
+
+    .card-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        background: white;
+        padding: 25px;
+        border-radius: 20px;
+        width: 260px;
+        box-shadow: 0 8px 16px rgba(0,105,92,0.08);
+        border: 3px solid #b2dfdb;
+    }
+
+    .card h2 {
+        margin: 0 0 15px 0;
+        font-size: 28px;
+        color: #00796b;
+    }
+
+    .balance {
+        font-size: 40px;
+        font-weight: bold;
+        color: #00897b;
+    }
+
+    .controls {
+        background: white;
+        max-width: 550px;
+        margin: 0 auto 30px auto;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+        border: 2px solid #b2dfdb;
+    }
+
+    select, input {
+        font-family: 'Nunito', 'Microsoft JhengHei', sans-serif;
+        font-size: 18px;
+        padding: 10px;
+        margin: 8px 4px;
+        border: 2px solid #b2dfdb;
+        border-radius: 10px;
+        outline: none;
+    }
+
+    button {
+        font-family: 'Nunito', 'Microsoft JhengHei', sans-serif;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 12px 24px;
+        margin: 10px 5px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .btn-deposit {
+        background-color: #4db6ac;
+        color: white;
+    }
+
+    .btn-deposit:hover { background-color: #26a69a; }
+
+    .btn-spend {
+        background-color: #ff8a65;
+        color: white;
+    }
+
+    .btn-spend:hover { background-color: #ff7043; }
+
+    /* 匯出按鈕的樣式 */
+    .btn-export {
+        background-color: #00897b;
+        color: white;
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+    
+    .btn-export:hover { background-color: #00695c; }
+
+    #history-container {
+        max-width: 600px;
+        margin: auto;
+        background: white;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+        border: 2px solid #b2dfdb;
+        text-align: left;
+    }
+
+    .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 2px dashed #b2dfdb;
+        padding-bottom: 15px;
+    }
+
+    .history-header h2 {
+        color: #00796b;
+        margin: 0;
+    }
+
+    .transaction {
+        font-size: 20px;
+        padding: 15px;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-left: 8px solid transparent;
+    }
+
+    .transaction .date {
+        font-size: 15px;
+        color: #666;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .transaction.income {
+        background-color: #e8f5e9;
+        border-left-color: #4caf50;
+        color: #2e7d32;
+    }
+
+    .transaction.expense {
+        background-color: #ffebee;
+        border-left-color: #f44336;
+        color: #c62828;
+    }
+
+    .trans-detail {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .trans-amount {
+        font-weight: bold;
+        font-size: 24px;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>🏦 Bank of Mom</h1>
+
+<div>
+    <img src="https://media.tenor.com/PZ27Q6Z-q_4AAAAi/chiikawa.gif" alt="Chiikawa" class="decoration-img">
+    <img src="https://media.tenor.com/mO24N5a9-f0AAAAi/chiikawa.gif" alt="Hachiware" class="decoration-img">
+</div>
+
+<div class="card-container">
+    <div class="card">
+        <h2>👦 Jayden</h2>
+        <div class="balance" id="jaydenBalance">$0</div>
+    </div>
+
+    <div class="card">
+        <h2>👦 Jamie</h2>
+        <div class="balance" id="jamieBalance">$0</div>
+    </div>
+</div>
+
+<div class="controls">
+    <select id="kid">
+        <option value="jayden">Jayden</option>
+        <option value="jamie">Jamie</option>
+    </select>
+    
+    <input id="amount" type="number" placeholder="金額 Amount (例: 10)">
+    <input id="note" type="text" placeholder="事項 Note (例: 幫忙做家事)">
+    
+    <br><br>
+    
+    <button class="btn-deposit" onclick="handleTransaction('deposit')">➕ 存入 Deposit</button>
+    <button class="btn-spend" onclick="handleTransaction('spend')">➖ 支出 Spend</button>
+</div>
+
+<div id="history-container">
+    <div class="history-header">
+        <h2>📝 交易紀錄 History</h2>
+        <button class="btn-export" onclick="exportToExcel()">📊 匯出 Excel</button>
+    </div>
+    <div id="history"></div>
+</div>
+
+<script>
+    let password = "8855";
+    
+    let bank = JSON.parse(localStorage.getItem('momBankData')) || { jayden: 0, jamie: 0 };
+    let history = JSON.parse(localStorage.getItem('momBankHistory')) || [];
+
+    function updateUI() {
+        document.getElementById("jaydenBalance").innerText = "$" + bank.jayden;
+        document.getElementById("jamieBalance").innerText = "$" + bank.jamie;
+        
+        localStorage.setItem('momBankData', JSON.stringify(bank));
+        localStorage.setItem('momBankHistory', JSON.stringify(history));
+        
+        let html = "";
+        
+        history.forEach(h => {
+            let isIncome = h.type === 'deposit';
+            let txClass = isIncome ? 'income' : 'expense';
+            let sign = isIncome ? '＋' : '－';
+            let kidName = h.kid.charAt(0).toUpperCase() + h.kid.slice(1);
+
+            html += `
+                <div class="transaction ${txClass}">
+                    <div class="trans-detail">
+                        <span class="date">📅 ${h.date} | 👦 ${kidName}</span>
+                        <span>${h.note}</span>
+                    </div>
+                    <div class="trans-amount">
+                        ${sign} $${h.amount}
+                    </div>
+                </div>
+            `;
+        });
+        
+        document.getElementById("history").innerHTML = html;
+    }
+
+    function checkPassword() {
+        let p = prompt("請輸入媽媽密碼 (Mom password):");
+        return p === password;
+    }
+
+    function handleTransaction(type) {
+        let amountInput = document.getElementById("amount").value;
+        let amount = Number(amountInput);
+        
+        if (!amountInput || amount <= 0) {
+            alert("請輸入有效的金額喔！");
+            return;
+        }
+
+        if (!checkPassword()) return;
+
+        let kid = document.getElementById("kid").value;
+        let note = document.getElementById("note").value || "無備註";
+        
+        let today = new Date();
+        let dateString = today.toLocaleDateString('zh-TW');
+
+        if (type === 'deposit') {
+            bank[kid] += amount;
+        } else {
+            bank[kid] -= amount;
+        }
+
+        history.unshift({
+            date: dateString,
+            type: type,
+            amount: amount,
+            note: note,
+            kid: kid
+        });
+
+        document.getElementById("amount").value = "";
+        document.getElementById("note").value = "";
+
+        updateUI();
+    }
+
+    // 匯出成 Excel (CSV格式) 的功能
+    function exportToExcel() {
+        if (history.length === 0) {
+            alert("目前還沒有任何交易紀錄可以匯出喔！");
+            return;
+        }
+
+        // 加入 BOM 讓 Excel 讀取 UTF-8 中文不亂碼
+        let csvContent = "\uFEFF"; 
+        csvContent += "日期,姓名,類型,金額,備註\n";
+
+        history.forEach(h => {
+            let kidName = h.kid.charAt(0).toUpperCase() + h.kid.slice(1);
+            let typeName = h.type === 'deposit' ? '存入' : '支出';
+            let sign = h.type === 'deposit' ? '+' : '-';
+            // 處理備註裡面可能包含的逗號，避免破壞 CSV 格式
+            let safeNote = h.note.replace(/"/g, '""');
+            
+            csvContent += `${h.date},${kidName},${typeName},${sign}${h.amount},"${safeNote}"\n`;
+        });
+
+        // 建立下載連結並觸發下載
+        let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        let link = document.createElement("a");
+        let url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "媽媽銀行_交易紀錄.csv");
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    updateUI();
+</script>
+
+</body>
+</html>
